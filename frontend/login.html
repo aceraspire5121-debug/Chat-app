@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="output.css">
+</head>
+
+<body class="h-full bg-[#212121]">
+    <div class="w-full h-full flex justify-center items-center">
+        <div class="md:w-[50%] md:h-[95%] w-full h-full flex flex-col items-center">
+
+            <div class="h-[30%] w-full flex justify-center items-center">
+                <img class="h-[80%]" src="svg/icon.svg" alt="">
+            </div>
+
+            <div class="text-[32px] pt-3 max-[410px]:text-[28px] font-medium text-white text-center">
+                Welcome Back
+            </div>
+
+            <div
+                class="xl:w-[30%] w-[50%] max-[380px]:w-[80%] text-center pt-2.5 text-[20px] font-normal text-[rgb(170,170,170)]">
+                Login to continue to NexChat
+            </div>
+
+            <input type="text" placeholder="Email"
+                class="email xl:w-[35%] w-[50%] h-[7.5%] text-[16px] font-normal text-white placeholder-white border-2
+                focus:border-[rgb(61,12,134)] hover:border-[rgb(61,12,134)] rounded-lg border-[rgb(170,170,170)]
+                focus:outline-none focus:ring-1 focus:ring-[rgb(61,12,134)] mt-6 pl-2">
+
+            <input type="password" placeholder="Password"
+                class="pass xl:w-[35%] w-[50%] h-[7.5%] text-[16px] font-normal text-white placeholder-white border-2
+                focus:border-[rgb(61,12,134)] hover:border-[rgb(61,12,134)] rounded-lg border-[rgb(170,170,170)]
+                focus:outline-none focus:ring-1 focus:ring-[rgb(61,12,134)] mt-5 pl-2">
+
+            <button
+                class="loginbtn xl:w-[35%] w-[50%] h-[7.5%] mt-5 rounded-lg
+                bg-[rgb(61,12,134)] text-white text-[16px] font-medium
+                hover:bg-[rgb(76,10,176)]
+                active:scale-[0.98]
+                transition-all duration-150
+                shadow-lg shadow-[rgba(61,12,134,0.4)]">
+                Login
+            </button>
+
+            <p class="mt-4 text-sm text-[rgb(170,170,170)]">
+                Don’t have an account?
+                <a href="/register.html"
+                    class="text-[rgb(76,10,176)] hover:text-[rgb(98,25,200)] transition-colors duration-150">
+                    Register
+                </a>
+            </p>
+
+        </div>
+    </div>
+    <script src="login.js"></script>
+</body>
+
+</html>

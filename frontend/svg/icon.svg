@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 240 240">
+  <!-- Background circle -->
+  <circle cx="120" cy="120" r="120" fill="#8b7afc"/>
+  
+  <!-- Paper plane icon -->
+  <path d="M50 120 L190 80 L160 160 L130 130 L120 180 Z" fill="#000000"/>
+</svg>

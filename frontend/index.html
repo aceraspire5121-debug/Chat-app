@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" class="w-full h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="output.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=more_horiz" />
+    <!-- <style>
+        @media (max-width: 820px) {
+            .leftcont {
+                width: 96%;
+            }
+
+            .rightcont {
+                width: 96%;
+                display: none;
+            }
+        }
+    </style> -->
+</head>
+
+<body class="w-full h-full">
+    <div class="parentcont w-full h-full bg-[#0F172A] flex justify-center items-center">
+        <div class="subcont w-[96%] h-[96%] lg:w-[90%] lg:h-[92%] flex">
+            <div class="leftcont max-[820px]:w-[96%] w-[30%] h-full bg-[#111827] flex flex-col gap-y-7">
+                <div class="logo h-16 border-t-2 border-b-2 border-[#1E293B] flex items-center px-4 gap-3 bg-[#111827]">
+                    <img class="h-10 w-10" src="svg/icon.svg" alt="NexChat Logo">
+                    <p class="text-white text-2xl font-semibold tracking-wide">NexChat</p>
+                </div>
+                <div class="flex justify-center px-4 py-2">
+                    <input
+                        class="h-12 w-full max-w-[90%] px-4 bg-[#1F2937] text-white placeholder-gray-400 border-2 border-[#1E293B] rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition"
+                        type="text" placeholder="Search users">
+                </div>
+
+                <div
+                    class="userbox h-full flex flex-col items-center gap-y-3 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-[#111827]">
+
+                    <div
+                        class="user-item flex items-center justify-between w-[80%] h-16 px-3 py-2 bg-[#1F2937] border-2 border-[#1E293B] rounded-xl hover:bg-gray-800 transition cursor-pointer">
+
+                        <!-- Left part: Avatar + info -->
+                        <div class="flex items-center gap-3">
+                            <!-- Avatar -->
+                            <div class="relative w-12 h-12">
+                                <img class="w-full h-full rounded-full object-cover" src="svg/profile.svg"
+                                    alt="User Avatar">
+                                <!-- Online/Offline dot -->
+                                <span
+                                    class="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-[#1F2937] bg-green-500"></span>
+                                <!-- For offline, use bg-gray-400 -->
+                            </div>
+
+                            <!-- Info: Name + status -->
+                            <div class="info flex flex-col justify-center">
+                                <p class="text-white font-medium truncate">Sushant Yadav</p>
+                                <p class="text-gray-400 text-sm">Online</p>
+                            </div>
+                        </div>
+
+                        <!-- Right part: Optional icon or status -->
+                        <div class="secondpart flex justify-center items-center">
+                            <!-- Could be online.svg or leave empty if using dot -->
+                            <img src="svg/online.svg" alt="status icon" class="w-5 h-5">
+                        </div>
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+            <div class="rightcont max-[820px]:w-[96%] min-[820px]:block hidden w-[70%] h-full bg-[#1F2937]">
+
+                <div class="firstpart h-[9%]">
+                    <div id="emptyHeader"
+                        class="flex items-center justify-between w-full h-full px-4 py-2 bg-[#1F2937] border-b border-[#374151]">
+
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-700 text-white">
+                                💬
+                            </div>
+                            <p class="text-gray-300 font-medium">Select a chat to start messaging</p>
+                        </div>
+
+                        <button
+                            class="logout px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/30 rounded-lg hover:bg-red-500/20 transition">
+                            Logout
+                        </button>
+                    </div>
+
+                </div>
+                <div class="message h-[82%] bg-[#0B1220] border-y border-[#1E293B] overflow-y-auto px-6 py-4">
+                    <!-- <div class="flex justify-start mb-2">
+                        <div class="max-w-[60%] bg-[#273449] text-white px-4 py-2 rounded-2xl rounded-bl-md break-all">
+                            Hello bhai
+                        </div>
+                    </div>
+                    <div class="flex justify-end mb-2">
+                        <div class="max-w-[60%] bg-blue-500 text-white px-4 py-2 rounded-2xl rounded-br-md break-all">
+                            Haan bhai, bol 😄
+                        </div>
+                    </div> -->
+
+
+                </div>
+
+                <div class="typing h-[9%] flex justify-center items-center gap-x-2.5 p-2.5">
+                    <input
+                        class="typebox h-11 w-full max-w-[80%] px-4 bg-[#273449] text-white placeholder-gray-400 border border-[#374151] rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition"
+                        type="text" placeholder="Type a message">
+
+                    <button
+                        class="sendbtn h-11 px-5 py-2.5 bg-blue-500 hover:bg-blue-600 active:scale-95 text-white font-medium rounded-xl shadow-md shadow-blue-500/20 transition-all duration-200">
+                        Send
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <!--equivalent to import {server} from "socket.io", jaise ye bali like bakend me socket.io sikhati hai load karti hai baise hi browser ko socket.io ye script line sikhati hai aur load karti hai -->
+    <script src="chat.js"></script>
+</body>
+
+</html>
