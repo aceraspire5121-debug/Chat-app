@@ -77,7 +77,8 @@ const render = (newdata = []) => { //if newdata defined hi na ho tab newdata ko 
     newdata.forEach((u) => {
          if (u._id === user._id) return; // apna khud ka card mat dikha
 
-      const isOnline = onlineUsers.includes(u._id);
+      const isOnline = onlineUsers.includes(u._id.toString());
+
 
         container.innerHTML += ` <div
                         class="user-item flex items-center justify-between w-[80%] h-16 px-3 py-2 bg-[#1F2937] border-2 border-[#1E293B] rounded-xl hover:bg-gray-800 transition cursor-pointer" data-id="${u._id}">
@@ -180,7 +181,8 @@ function messagebox() {
     if (index === -1) return;
 
     const u = allusers[index];
-    const isOnline = onlineUsers.includes(u._id);
+    const isOnline = onlineUsers.includes(u._id.toString());
+
 
     // Save selected user
     selectedUser = u;
