@@ -149,6 +149,20 @@ document.querySelector(".sendbtn").addEventListener("click", () => {
   document.querySelector(".typebox").value = "";
 });
 
+document.querySelector(".typebox").addEventListener("keydown", (e) => {
+  if(e.key==="Enter"){
+  const typebox = document.querySelector(".typebox").value.trim();
+  if (!typebox || !selectedUser) return;
+  // Send message via socket
+  socket.emit("send_message", {
+    senderId: user._id,
+    receiverId: selectedUser._id,
+    message: typebox
+  });
+  document.querySelector(".typebox").value = "";
+      }
+});
+
 
 async function loadChatHistory(receiverId) {
     // console.log("TOKEN:", localStorage.getItem("chatToken"));
