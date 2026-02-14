@@ -47,6 +47,8 @@ function initSocket() {
   socket.on("online_users", (users) => { //socket.on mtlb user sun raha hai
     onlineUsers = users;
     render(allusers);
+    if(selectedUser)
+      updateHeader()
     console.log("Online users:", users);
   });
 
@@ -303,7 +305,22 @@ async function loadChatHistory(receiverId) {
   messageDiv.scrollTop = messageDiv.scrollHeight;
 }
 
-
+function updateHeader(){
+  if(!selectedUser)
+    return;
+const isOnline = onlineUsers.includes(selectedUser._id.toString());
+  const dott=document.querySelector(".firstpart .info34");
+  if(dott)
+  {
+    dott.classList.remove("bg-green-500", "bg-gray-500")
+    dott.classList.add(isOnline?"bg-green-500":"bg-gray-500")
+  }
+  const textt=document.querySelector(".firstpart .info p:nth-child(2)")
+  if(textt)
+  {
+    textt.textContent = isOnline ? "Online" : "Offline";
+  }
+}
 
 function messagebox() {
   document.querySelector(".userbox").addEventListener("click", async (e) => {
@@ -334,7 +351,7 @@ function messagebox() {
 
           <div class="relative w-12 h-12">
             <img class="w-full h-full rounded-full object-cover" src="svg/profile.svg" alt="User Avatar">
-            <span class="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-[#1F2937] ${isOnline ? "bg-green-500" : "bg-gray-500"}"></span>
+            <span class="info34 absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-[#1F2937] ${isOnline ? "bg-green-500" : "bg-gray-500"}"></span>
           </div>
           <div class="info flex flex-col justify-center">
             <p class="text-white font-medium truncate">${u.name}</p>
