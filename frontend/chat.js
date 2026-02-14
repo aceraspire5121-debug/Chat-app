@@ -244,7 +244,7 @@ function createMessageBubble(msg, type = "received") {
       <div class="relative max-w-[60%] min-w-[90px]
         bg-[#273449] text-white
         px-4 pt-2 pb-5 pr-14
-        rounded-2xl rounded-br-md break-all">
+        rounded-2xl rounded-bl-md break-all">
 
         ${msg.message}
 
