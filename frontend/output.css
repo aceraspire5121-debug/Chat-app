@@ -639,6 +639,9 @@
     --tw-tracking: var(--tracking-wide);
     letter-spacing: var(--tracking-wide);
   }
+  .break-words {
+    overflow-wrap: break-word;
+  }
   .break-all {
     word-break: break-all;
   }
@@ -877,6 +880,11 @@
   .min-\[820px\]\:block {
     @media (width >= 820px) {
       display: block;
+    }
+  }
+  .sm\:max-w-\[60\%\] {
+    @media (width >= 40rem) {
+      max-width: 60%;
     }
   }
   .md\:h-\[95\%\] {

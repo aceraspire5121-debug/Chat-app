@@ -219,10 +219,10 @@ function createMessageBubble(msg, type = "received") {
            data-id="${msg._id}"
            data-status="${msg.status}">
 
-        <div class="relative max-w-[60%] min-w-[90px]
+        <div class="relative max-w-[80%] sm:max-w-[60%] min-w-[90px]
            bg-[#005C4B] text-white
            px-4 pt-2 pb-5 pr-14
-           rounded-2xl rounded-br-md break-all">
+           rounded-2xl rounded-br-md break-words">
 
           ${msg.message}
 
@@ -241,10 +241,10 @@ function createMessageBubble(msg, type = "received") {
 
   return `
     <div class="flex justify-start mb-2">
-      <div class="relative max-w-[60%] min-w-[90px]
+      <div class="relative max-w-[80%] sm:max-w-[60%] min-w-[90px]
         bg-[#273449] text-white
         px-4 pt-2 pb-5 pr-14
-        rounded-2xl rounded-bl-md break-all">
+        rounded-2xl rounded-bl-md break-words">
 
         ${msg.message}
 
