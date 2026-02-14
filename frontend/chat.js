@@ -15,6 +15,15 @@ const users = async () => {
     render(allusers)
 }
 
+const formatTime = (date) => {
+  return new Date(date).toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true
+  }).toLowerCase();
+};
+
+
 function initSocket(){
  socket = io("/", { //everyuser is sending request to the server io.on("connection") to make socket connection and that server is accepting the user request and establish socket connection along with this,server also generates socket object for each user having unique ids. 
 // "/" means:
@@ -50,9 +59,10 @@ socket.on("receive_message", (message) => {
   if (message.senderId === selectedUser._id || message.receiverId === selectedUser._id) {
     // Determine if sent or received
     const type = message.senderId === user._id ? "sent" : "received";
+    const time = formatTime(message.createdAt);
 
     // Append to .message container
-    document.querySelector(".message").innerHTML += createMessageBubble(message.message, type);
+    document.querySelector(".message").innerHTML += createMessageBubble(message.message, type,time);
 
     // Optional: scroll to bottom
     const messageDiv = document.querySelector(".message");
@@ -113,16 +123,59 @@ const render = (newdata = []) => { //if newdata defined hi na ho tab newdata ko 
     })
 }
 
-function createMessageBubble(text, type = "received") {
+
+function createMessageBubble(text, type = "received",time,type2="nothistory") {
+  const isOnline = onlineUsers.includes(selectedUser._id.toString());
+  if(type2==="history" && type==="sent")
+  {
+return `<div class="flex justify-end mb-2">
+                        <div class="relative max-w-[60%] min-w-[90px]
+           bg-[#005C4B] text-white
+           px-4 pt-2 pb-5 pr-14
+           rounded-2xl rounded-br-md break-all">
+
+                            ${text}
+
+                            <div class="absolute bottom-1 right-2 flex items-center gap-1
+             text-[10px] text-[#34B7F1] leading-none">
+                                <span class="text-[#AEBAC1]">${time}</span>
+
+                                <svg width="18" height="13" viewBox="0 0 20 14">
+                                    <path d="M1.5 7.5L5 11L11.5 3" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M7.5 7.5L11 11L17.5 3" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+
+                        </div>
+                    </div>`
+  }
+  else{
     if (type === "sent") {
         return `
-       <div class="flex justify-end mb-2">
-                        <div class="max-w-[60%] bg-blue-500 text-white px-4 py-2 rounded-2xl rounded-br-md break-all">
+        <div class="flex justify-end mb-2">
+                        <div class="relative max-w-[60%] min-w-[90px]
+           bg-[#005C4B] text-white
+           px-4 pt-2 pb-5 pr-14
+           rounded-2xl rounded-br-md break-all">
+
                             ${text}
+
+                            <div class="absolute bottom-1 right-2 flex items-center gap-1
+             text-[10px] ${isOnline?"text-[#34B7F1]":"text-[#8696A0]"} leading-none">
+                                <span class="text-[#AEBAC1]">${time}</span>
+
+                                <svg width="18" height="13" viewBox="0 0 20 14">
+                                    <path d="M1.5 7.5L5 11L11.5 3" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M7.5 7.5L11 11L17.5 3" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+
                         </div>
                     </div>
-
-      </div>
     `;
     } else {
         return `
@@ -133,6 +186,7 @@ function createMessageBubble(text, type = "received") {
                     </div>
     `;
     }
+  }
 }
 
 document.querySelector(".sendbtn").addEventListener("click", () => {
@@ -170,13 +224,13 @@ async function loadChatHistory(receiverId) {
          headers: { "Authorization": `Bearer ${localStorage.getItem("chatToken")}` }
     });
     const messages = await res.json();
-
     const messageDiv = document.querySelector(".message");
     messageDiv.innerHTML = ""; // clear old messages
 
     messages.forEach(msg => {
         const type = msg.senderId === user._id ? "sent" : "received";
-        messageDiv.innerHTML += createMessageBubble(msg.message, type);
+        const time = formatTime(msg.createdAt);
+        messageDiv.innerHTML += createMessageBubble(msg.message, type,time,"history");
     });
 
     // scroll to bottom
