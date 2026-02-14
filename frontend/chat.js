@@ -378,6 +378,8 @@ function messagebox() {
       //     })
     }
 
+    document.querySelector(".message").innerHTML="";
+
 
     await loadChatHistory(selectedUser._id)
 
