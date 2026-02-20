@@ -21,18 +21,36 @@ export const initSocket = (server) => {
     socket.on("login", async (userId) => {
       socket.userId = userId; // ab socket object ke andar real user ki ID bhi stored hai, jo user connect hua uska socket ban gaya login kia uske socket object me userid field banakar user userid bhi dal di jissse aaram se pata chal jaye ki ye socket is user ko belong kar raha hai
       onlineUsers.set(userId, socket.id); //iska use hoga private messaging me
-
+try{
   // Find all messages that were sent to this user
   const undeliveredMessages = await Message.find({
     receiverId: userId,
     status: "sent"
   });
-      await Message.updateMany({receiverId:userId,status:"sent"},{$set:{status:"delivered"}}) // all the messages sent to me become delivered when i logged in
 
+      await Message.updateMany({receiverId:userId,status:"sent"},{$set:{status:"delivered"}}) // all the messages sent to me become delivered when i logged in
+     const counting= await Message.find({receiverId:userId,status: { $ne: "read" }});
   // Notify each sender
   const uniqueSenders = [
     ...new Set(undeliveredMessages.map(m => m.senderId.toString())) // jaise mujhe kisi teen logo ne message bheje kisi ne 4 message kisi ne 8 message kisi ne 1 message par sender to total teen hi hue,lekin undeliveredmessages me sare messages hai jisko agar map karoge to sare sender aayegenge jisme repeated sender bhi honge isliye set lagaya jisse jitne bhi repeated senderId hai bo hat jaye kebal unique rahe aur set lagane ka tareeka hi hai new set fir ... lagaya hai kyoki ye sar [] ke andar likha hai to jab sare unique sender aa jaye set ke andar to poore set ko kholkar bapas array me convert kardo
   ];
+
+    const uniqueSenders2 = [
+    ...new Set(counting.map(m => m.senderId.toString())) // jaise mujhe kisi teen logo ne message bheje kisi ne 4 message kisi ne 8 message kisi ne 1 message par sender to total teen hi hue,lekin undeliveredmessages me sare messages hai jisko agar map karoge to sare sender aayegenge jisme repeated sender bhi honge isliye set lagaya jisse jitne bhi repeated senderId hai bo hat jaye kebal unique rahe aur set lagane ka tareeka hi hai new set fir ... lagaya hai kyoki ye sar [] ke andar likha hai to jab sare unique sender aa jaye set ke andar to poore set ko kholkar bapas array me convert kardo
+  ];
+
+
+  // console.log("mai chal raha hu bhai")
+  // console.log(uniqueSenders)
+
+  uniqueSenders2.forEach((senderId)=>{
+    console.log(1)
+   const l = counting.filter(
+  mess => mess.senderId.toString() === senderId
+);
+    // console.log(l);
+    socket.emit("noofmessage",{totalmessage:l.length,newsenderId:senderId});
+  })
 
 uniqueSenders.forEach((senderId)=>{
        const senderSocket= onlineUsers.get(senderId);//is senderId ke corresponding socket id nikal li kyoki message to uspr hi jayega na
@@ -45,6 +63,10 @@ uniqueSenders.forEach((senderId)=>{
 
       console.log("Online Users:", Array.from(onlineUsers.keys()));
       io.emit("online_users", Array.from(onlineUsers.keys())); // io.emit() sab connected users ko data bhejta hai.
+}catch(err){
+  console.log('error is',err);
+  
+}
     });
 
 example:-
@@ -65,7 +87,6 @@ example:-
       let status="sent"
       if(receiverSocket) status="delivered"
       const newMessage = await Message.create({...data,status});
-
       // send to receiver only if online
       if (receiverSocket) {
         io.to(receiverSocket).emit("receive_message", newMessage); // it is sent only to the aditya's browser, it will not go to my browser or my frontend, it will go and run into aditya's browser or frontend and in his browser senderid==user._id since message is sent from my side so senderid par maine apni id dali hui hai to uske chat.js me condition false ho jayegi or type=recieved aa jayega to recieve bubble ban jayega

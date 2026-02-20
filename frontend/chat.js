@@ -53,6 +53,20 @@ function initSocket() {
   });
 
   socket.on("receive_message", (message) => {
+let index=-1;
+const isOwnMessage = message.senderId === user._id; //agar maine hi message bheja hai tab bhi increase nhi karenge
+const isChatOpen =selectedUser && selectedUser._id === message.senderId; //agar jo message bhej raha hai uski chat open hai to increase nhi karenge
+  
+if(!isChatOpen&&!isOwnMessage){
+     index=allusers.findIndex(u=>u._id===message.senderId);
+    if(index===-1)
+      return;
+    if(allusers[index].unreadcount)
+         allusers[index].unreadcount+=1;
+        else
+          allusers[index].unreadcount=1;
+        render(allusers)
+}
     // Only show message if the current selected user is either sender or receiver
     if (!selectedUser) return; // No user selected yet
 
@@ -68,21 +82,25 @@ function initSocket() {
       // Optional: scroll to bottom
       const messageDiv = document.querySelector(".message");
       messageDiv.scrollTop = messageDiv.scrollHeight;
-
       if ( message.senderId === selectedUser?._id && message.receiverId === user._id)
          {
-        socket.emit("mark_read", {
+          const newindex=allusers.findIndex(m=>m._id===message.senderId) // bo message bhej raha hai to uski id ke box par change karoge na
+          if (newindex !== -1) {
+   allusers[newindex].unreadcount = 0;
+}
+          render(allusers);
+        socket.emit("mark_read", { 
           senderId: message.senderId,
           receiverId: user._id
         });
       }
-
     }
   });
 
   socket.on("message_read", ({ senderId }) => {
 
     if (!selectedUser || selectedUser._id !== senderId) return;
+
 
     document
       .querySelectorAll(".sent-message[data-status='delivered']")
@@ -124,6 +142,15 @@ socket.on("message_delivered", ({ deliveredTo }) => {
       `;
     });
 });
+
+socket.on("noofmessage",({totalmessage,newsenderId})=>{
+  // console.log(newsenderId)
+  // console.log("mai hu length",totalmessage);
+  // console.log(allusers);
+ const index=allusers.findIndex(u=>u._id===newsenderId);
+allusers[index].unreadcount=totalmessage;
+render(allusers)
+})
 }
 
 (async function init() {
@@ -144,7 +171,7 @@ const render = (newdata = []) => { //if newdata defined hi na ho tab newdata ko 
 
 
     container.innerHTML += ` <div
-                        class="user-item flex items-center justify-between w-[80%] h-16 px-3 py-2 bg-[#1F2937] border-2 border-[#1E293B] rounded-xl hover:bg-gray-800 transition cursor-pointer" data-id="${u._id}">
+                        class="user-item flex items-center justify-between w-[87%] h-16 px-3 py-2 bg-[#1F2937] border-2 border-[#1E293B] rounded-xl hover:bg-gray-800 transition cursor-pointer" data-id="${u._id}">
 
                         <!-- Left part: Avatar + info -->
                         <div class="flex items-center gap-3">
@@ -161,14 +188,21 @@ const render = (newdata = []) => { //if newdata defined hi na ho tab newdata ko 
                             <!-- Info: Name + status -->
                             <div class="info flex flex-col justify-center">
                                 <p class="text-white font-medium truncate">${u.name}</p>
-                                <p class="text-gray-400 text-sm">${isOnline ? "Online" : "Offline"}</p>
+                                <p class="text-gray-400 text-sm">${isOnline?"Online":"Offline"}</p>
                             </div>
                         </div>
 
                         <!-- Right part: Optional icon or status -->
-                        <div class="secondpart hidden lg:block flex justify-center items-center">
+                        <div class="secondpart flex gap-1.5 justify-center items-center border-amber-200">
                             <!-- Could be online.svg or leave empty if using dot -->
-                            <img src="svg/${isOnline ? 'online.svg' : 'offline.svg'}" alt="status icon" class="w-5 h-5">
+                             <div class="relative">
+                                <span class="messagecount w-5 h-5 px-1 flex items-center justify-center 
+                 bg-blue-600 text-white text-xs font-semibold 
+                 rounded-full">
+                 ${u.unreadcount?u.unreadcount:""}
+                                </span>
+                            </div>
+                            <img  src="svg/offline.svg" alt="status icon" class="w-4 h-4 lg:block hidden">
                         </div>
 
                     </div>`
@@ -338,6 +372,13 @@ function messagebox() {
     // Save selected user
     selectedUser = u;
 
+    // disappear all the unread messages
+    const ind=allusers.findIndex(m=>m._id===selectedUser._id);
+    if(ind===-1)
+      return;
+    allusers[ind].unreadcount=0;
+    render(allusers)
+
     // Update header
     const firstPart = document.querySelector(".firstpart");
     firstPart.innerHTML = `
@@ -423,9 +464,5 @@ document.addEventListener("click", (e) => {
 
 handleResponsive();
 window.addEventListener("resize", handleResponsive) //eventlistener me function call nhi,function reference jata hai
-
-
-
-
 
 
