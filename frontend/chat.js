@@ -326,6 +326,12 @@ async function loadChatHistory(receiverId) {
   const res = await fetch(`/api/messages/${receiverId}`, {
     headers: { "Authorization": `Bearer ${localStorage.getItem("chatToken")}` }
   });
+  if (res.status === 401) {
+  localStorage.removeItem("chatToken");
+  localStorage.removeItem("user");
+  window.location.href = "/login.html";
+  return;
+}
   const messages = await res.json();
   const messageDiv = document.querySelector(".message");
   messageDiv.innerHTML = ""; // clear old messages
